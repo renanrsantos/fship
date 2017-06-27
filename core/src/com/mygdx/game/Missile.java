@@ -20,26 +20,26 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class Missile extends FSprite{
 
-    private final float velocidade = 5;
+    private final float velocidade = 5; //Seta velocidade do Missil
     
-    public Animation<TextureRegion> missileAnim;
+    public Animation<TextureRegion> missileAnim; //Textura do Missil
     private final TextureRegion[] missile;
     
-    private final Rectangle collision;
+    private final Rectangle collision; //Retangulo de colisão
     
-    public Missile(int widthTela, int heightTela, float x, float y) {
+    public Missile(int widthTela, int heightTela, float x, float y) { //Seta a posição do missil na tela
         super(widthTela, heightTela);
-        this.setX(x);
-        this.setY(y);
+        this.setX(x);   //posicao do missivel no eixo X
+        this.setY(y);   //posicao do missivel no eixo Y
         
         this.missile = new TextureRegion[3];
         for(int i = 0; i < 3; i++){
-            this.missile[i] = new TextureRegion( new Texture("missile/missile00"+(i+1)+".png"));
+            this.missile[i] = new TextureRegion( new Texture("missile/missile00"+(i+1)+".png"));   //Imagem do missil
         }
         this.missileAnim = new Animation<TextureRegion>(this.velocidadeAnim(),this.missile);
         
         this.collision = new Rectangle(this.getX(),this.getY(),5,15);
-        this.sound = Gdx.audio.newSound(Gdx.files.internal("missile/sound.wav"));
+        this.sound = Gdx.audio.newSound(Gdx.files.internal("missile/sound.wav"));   //Som do missil
         
         this.playSound(1);
     }

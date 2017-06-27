@@ -34,7 +34,7 @@ public class Ship extends FSprite{
     private Animation<TextureRegion> shipMovendoDireitaAnim;
 
     private boolean movendo;
-    private boolean atirando;
+    private boolean atirando;    
     private boolean parado;
     
     private boolean movendoEsquerda;
@@ -43,12 +43,12 @@ public class Ship extends FSprite{
     private float timeTiroAnt;
     private float timeScore;
     
-    public List<Missile> missiles;
+    public List<Missile> missiles;    //Lista de misseis
     
     private final Rectangle collision;
 
-    private int score;
-    private int life;
+    private int score;  //Pontuação
+    private int life;   //Vida
     
     private final BitmapFont labelScore;
     private final BitmapFont labelLife;
@@ -62,21 +62,21 @@ public class Ship extends FSprite{
         
         this.collision = new Rectangle(this.getX(),this.getY(),40,50);
         this.timeTiroAnt = Gdx.graphics.getDeltaTime();
-        this.timeScore = this.timeTiroAnt;
+        this.timeScore = this.timeTiroAnt;   //tempo do tiro anterior
         
-        this.score = 0;
-        this.life = 100;
+        this.score = 0;    //Pontuação inicia em 0
+        this.life = 100;   //Vida inicia em 100
         
         this.labelLife = new BitmapFont();
-        this.labelLife.setColor(Color.GREEN);
+        this.labelLife.setColor(Color.GREEN);   //estilo da vida e pontuação
         this.labelScore = new BitmapFont();
     }
     
-    public boolean isMovendo() {
+    public boolean isMovendo() {   //variavel se esta se movendo
         return movendo;
     }
 
-    public void setMovendo(boolean movendo) {
+    public void setMovendo(boolean movendo) {    
         this.movendo = movendo;
         
         if(this.movendo){
@@ -87,17 +87,17 @@ public class Ship extends FSprite{
         }
     }
 
-    public int getScore() {
+    public int getScore() {   //Função da pontuação
         return score;
     }
 
-    public int getLife() {
+    public int getLife() {   //Função da vida
         return life;
     }
     
     
 
-    public boolean isAtirando() {
+    public boolean isAtirando() {   //variavel se esta atirando
         return atirando;
     }
 
@@ -110,11 +110,11 @@ public class Ship extends FSprite{
         }
     }
 
-    public boolean isParado() {
+    public boolean isParado() {    //variavel se esta parado
         return parado;
     }
 
-    public Rectangle getCollision() {
+    public Rectangle getCollision() {   //retangulo de colisão
         return collision;
     }
     
@@ -127,11 +127,11 @@ public class Ship extends FSprite{
         }
     }
 
-    public boolean isMovendoEsquerda() {
+    public boolean isMovendoEsquerda() {    //variavel se esta se movendo a esquerda
         return movendoEsquerda;
     }
 
-    public void setMovendoEsquerda(boolean movendoEsquerda) {
+    public void setMovendoEsquerda(boolean movendoEsquerda) {     //Movimentação a esquerda
         this.setMovendo(movendoEsquerda);
         this.movendoEsquerda = movendoEsquerda;
         this.movendoDireita = this.movendoEsquerda ? false : this.movendoDireita;
@@ -146,11 +146,11 @@ public class Ship extends FSprite{
         }
     }
 
-    public boolean isMovendoDireita() {
+    public boolean isMovendoDireita() {    //variavel se esta se movendo a direita
         return movendoDireita;
     }
 
-    public void setMovendoDireita(boolean movendoDireita) {
+    public void setMovendoDireita(boolean movendoDireita) {    //Movimentação a direta
         this.setMovendo(movendoDireita);
         this.movendoDireita = movendoDireita;
         this.movendoEsquerda = this.movendoDireita ? false : this.movendoEsquerda;
@@ -177,15 +177,15 @@ public class Ship extends FSprite{
         //implementar por tempo
         return true;
     }
-    
+    // Função que permite mover a direita
     private boolean permiteMoverDireita(){
         return this.permiteMover() && this.getX() < (this.widthTela - (this.widthTela*this.porcentagemLateral/100));
     }
-    
+    // Função que permite mover a esquerda
     private boolean permiteMoverEsquerda(){
         return this.permiteMover() && this.getX() > (this.widthTela - (this.widthTela*(100-this.porcentagemLateral)/100));
     }
-    
+    // Função que permite atirar
     public boolean permiteAtirar(){
         if(time - timeTiroAnt > 0.5){
             timeTiroAnt = time;
@@ -193,7 +193,7 @@ public class Ship extends FSprite{
         }
         return false;
     }
-    
+    //Desenha as animações paradas
     public final Animation<TextureRegion> getShipParadoAnim() {
         if(this.shipParadoAnim == null){
             this.shipParado = new TextureRegion[3];
@@ -204,7 +204,7 @@ public class Ship extends FSprite{
         }
         return shipParadoAnim;
     }
-
+    //Desenha as animações se movendo a esquerda
     public Animation<TextureRegion> getShipMovendoEsquerdaAnim() {
         if(this.shipMovendoEsquerdaAnim == null){
             this.shipMovendoEsquerda = new TextureRegion[3];
@@ -215,7 +215,7 @@ public class Ship extends FSprite{
         }
         return shipMovendoEsquerdaAnim;
     }
-
+    //Desenha as animações se movendo a direita
     public Animation<TextureRegion> getShipMovendoDireitaAnim() {
         if(this.shipMovendoDireitaAnim == null){
             this.shipMovendoDireita = new TextureRegion[3];
@@ -231,7 +231,7 @@ public class Ship extends FSprite{
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, float delta) {
         this.time = delta;
         if(this.time - this.timeScore > 1){
-            this.timeScore = this.time;
+            this.timeScore = this.time;   //Pontuação
             this.incScore();
         }
         
@@ -246,7 +246,7 @@ public class Ship extends FSprite{
             shapeRenderer.end();
         }
         
-        if(this.life <= 0){
+        if(this.life <= 0){   // Verifica se foi destruido
             this.setDestruido(true);
         } else {
             labelLife.draw(batch,Integer.toString(life),20,heightTela-20);
@@ -263,14 +263,14 @@ public class Ship extends FSprite{
         return false;
     }
 
-    public Missile atirar() {
+    public Missile atirar() {  /// Atirar os misseis
         this.atirando = false;
         return new Missile(this.widthTela,this.heightTela,
                 this.collision.getX() + (this.collision.getWidth()/2),
                 this.getY()+this.collision.getHeight());
     }
 
-    public void decLife(Meteor collision){
+    public void decLife(Meteor collision){ //Valores das colisões
         switch(collision.tag){
             case 1:
                 this.life -= 10;
@@ -293,7 +293,7 @@ public class Ship extends FSprite{
         }
     }
     
-    public void incScore(Meteor collision){
+    public void incScore(Meteor collision){  //Aumentar as pontuações
         switch(collision.tag){
             case 1:
                 this.score += 25;

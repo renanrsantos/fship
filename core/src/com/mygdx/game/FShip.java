@@ -19,16 +19,16 @@ public class FShip extends ApplicationAdapter {
     ShapeRenderer shapeRenderer;
     OrthographicCamera camera;
     
-    int width;
-    int height;
+    int width; // Variavel da LArgura
+    int height;  // Variavel da Altura
     int srcy;
-    float time;
-    float[] timeAntMeteor;
-    List<Meteor> meteors;
-    List<Missile> missiles;
+    float time;  // Variavel de Tempo
+    float[] timeAntMeteor;  
+    List<Meteor> meteors;  //Lista de Meteoros  
+    List<Missile> missiles;  // Lista de Misseis
     
-    Ship p1;
-    Sprite background;
+    Ship p1; // Define a nave (Player1)
+    Sprite background;  //
     Texture backgroundTexture;
 
     InputProcessor key;
@@ -37,10 +37,10 @@ public class FShip extends ApplicationAdapter {
     public void create () {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        p1 = new Ship(width, height);
+        p1 = new Ship(width, height);  //Cria uma nova nave com os tamanhos
         
-        backgroundTexture = new Texture("background.jpg");
-        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        backgroundTexture = new Texture("background.jpg");  // Chama a Imagem do background
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat); //Imagem se repetira
         background = new Sprite(backgroundTexture);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -51,14 +51,14 @@ public class FShip extends ApplicationAdapter {
         timeAntMeteor = new float[] {deltaTime,deltaTime,deltaTime};
         
         
-        meteors = new ArrayList<Meteor>();
-        missiles = new ArrayList<Missile>();
+        meteors = new ArrayList<Meteor>();  //Cria um array da lista de meteoros
+        missiles = new ArrayList<Missile>();  //Cria um array da lista de Misseis
         
-        p1.missiles = missiles;
+        p1.missiles = missiles; // Os misseis da Nave
     }
 
     @Override
-    public void render () {
+    public void render () { 
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -68,37 +68,37 @@ public class FShip extends ApplicationAdapter {
         
         time += Gdx.graphics.getDeltaTime();
         
-        batch.begin();
-        drawBackground();
+        batch.begin();  // Inicia o jogo 
+        drawBackground(); // Carrega o BackGround
             
-        if(!p1.isDestruido()){
+        if(!p1.isDestruido()){ // Validação se a nave não foi destruida 
             for(int i=1; i <= 3; i++){
-                instanciaMeteor(i);
+                instanciaMeteor(i); // Cria mais meteoros
             }
             setEstadoJogador();
-            drawShip();
-            drawMeteors();   
-            drawMissiles();
+            drawShip(); //Desenha o Avião
+            drawMeteors();   //Desenha os meteoros
+            drawMissiles();  //Desenha os misseis
         }
         batch.end();
     }
 
     @Override
     public void dispose () {
-        batch.dispose();
-        p1.dispose();
+        batch.dispose(); // encerra o jogo 
+        p1.dispose();  // destroi a nave
     }
         
     public int getVelocidade(){
-        return 3;
+        return 3; // Seta a velocidade do background
     }
     
-    public void drawBackground(){
+    public void drawBackground(){ //define como o background ira ser executado
         batch.draw(backgroundTexture,0,0,0,srcy,width,height);
         srcy -= getVelocidade();
     }
     
-    public void setEstadoJogador(){
+    public void setEstadoJogador(){   //Metodo que verifica as teclas que o Jogador esta apertando
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || 
                 Gdx.input.isKeyPressed(Input.Keys.RIGHT) ||
                 Gdx.input.isKeyPressed(Input.Keys.SPACE)){
@@ -117,12 +117,12 @@ public class FShip extends ApplicationAdapter {
         }
     }
     
-    public void instanciaMeteor(int id){
+    public void instanciaMeteor(int id){  // Metodo para instanciar os meteoros
         switch(id){
             case 1:
-                if(time - timeAntMeteor[0] > 3){
-                    meteors.add(new Meteor(width, height,1));
-                    timeAntMeteor[0] = time;
+                if(time - timeAntMeteor[0] > 3){ // verifica o tempo do meteoro anterior
+                    meteors.add(new Meteor(width, height,1)); //novo meteoro
+                    timeAntMeteor[0] = time; //zera o tempo do meteoro anterior
                 }
                 break;
             case 2:
@@ -140,40 +140,40 @@ public class FShip extends ApplicationAdapter {
         }
     }
     
-    public void drawShip(){
-        p1.draw(batch, shapeRenderer, time);
+    public void drawShip(){  
+        p1.draw(batch, shapeRenderer, time);   // Metodo que inicia e renderiza a nave
     }
     
-    public void drawMissiles(){
+    public void drawMissiles(){    
         Iterator<Missile> itr = missiles.iterator();
         while(itr.hasNext()) {
             Missile m = itr.next();
             m.draw(batch, shapeRenderer, time);            
             if(m.isDestruido()){
-                itr.remove();
+                itr.remove();  // Remove os Missies destruidos
             }
         }
     
     }
     
-    public void drawMeteors(){
+    public void drawMeteors(){   // Metodo que implementa os meteoros
         Iterator<Meteor> itr = meteors.iterator();
         while(itr.hasNext()) {
             Meteor m = itr.next();
             m.draw(batch, shapeRenderer, time);
 
-            boolean collMissiles = m.collides(missiles);
-            boolean collShip = m.collides(p1);
-            if(collMissiles || collShip){
-                m.setDestruido(true);
+            boolean collMissiles = m.collides(missiles);  //Variavel se o missil colidiu ou não
+            boolean collShip = m.collides(p1); //Variavel se a nave colidiu no meteoro ou não
+            if(collMissiles || collShip){ //
+                m.setDestruido(true);//seta meteoro como destruido
                 p1.incScore(m);
-                if(collShip){
-                    p1.decLife(m);
+                if(collShip){ //Validação se a nave colidiu no meteoro
+                    p1.decLife(m); //perde vida
                 }
             }
             
-            if(m.isDestruido()){
-                itr.remove();
+            if(m.isDestruido()){ // se o meteoro for destruido
+                itr.remove();  // remove os meteoros destruidos
             }
         }
     }
