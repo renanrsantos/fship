@@ -21,64 +21,64 @@ import java.util.List;
  */
 public class Ship extends FSprite{
     private final int porcentagemLateral = 8;
-    
+
     public Animation<TextureRegion> shipAnim;
-    
+
     private TextureRegion[] shipParado;
     private Animation<TextureRegion> shipParadoAnim;
-    
+
     private TextureRegion[] shipMovendoEsquerda;
     private Animation<TextureRegion> shipMovendoEsquerdaAnim;
-    
+
     private TextureRegion[] shipMovendoDireita;
     private Animation<TextureRegion> shipMovendoDireitaAnim;
 
     private boolean movendo;
     private boolean atirando;
     private boolean parado;
-    
+
     private boolean movendoEsquerda;
     private boolean movendoDireita;
-    
+
     private float timeTiroAnt;
     private float timeScore;
-    
+
     public List<Missile> missiles;
-    
+
     private final Rectangle collision;
 
     private int score;
     private int life;
-    
+
     private final BitmapFont labelScore;
     private final BitmapFont labelLife;
-    
+
     public Ship(int widthTela, int heightTela) {
         super(widthTela, heightTela);
-        this.shipAnim = this.getShipParadoAnim();
-               
+        this.shipAnim = this.getShipParadoAnim();                       //Animações para quando a nave esta parada ou se movendo
+
         this.setX(this.widthTela/2-(this.widthTela*3/100));
         this.setY(this.heightTela-(this.heightTela*90/100));
-        
+
         this.collision = new Rectangle(this.getX(),this.getY(),40,50);
         this.timeTiroAnt = Gdx.graphics.getDeltaTime();
         this.timeScore = this.timeTiroAnt;
-        
+
         this.score = 0;
         this.life = 100;
-        
+
         this.labelLife = new BitmapFont();
         this.labelLife.setColor(Color.GREEN);
         this.labelScore = new BitmapFont();
     }
-    
-    public boolean isMovendo() {
+
+    public boolean isMovendo() {                                       //Variavel para definir se a nave esta se movendo
         return movendo;
     }
 
-    public void setMovendo(boolean movendo) {
+    public void setMovendo(boolean movendo) {                         //Função para definir se a nave esta se movendo ou atirando
         this.movendo = movendo;
-        
+
         if(this.movendo){
             this.atirando = false;
         } else {
@@ -87,21 +87,21 @@ public class Ship extends FSprite{
         }
     }
 
-    public int getScore() {
+    public int getScore() {                                         //Função para buscar pontuação
         return score;
     }
 
-    public int getLife() {
+    public int getLife() {                                         //Função para buscar vida
         return life;
     }
-    
-    
 
-    public boolean isAtirando() {
+
+
+    public boolean isAtirando() {                                 //Variavel para verificar se esta atirando
         return atirando;
     }
 
-    public void setAtirando(boolean atirando) {
+    public void setAtirando(boolean atirando) {                   //Lógica para verificar se esta atirando, e caso for atirar ira verificar se o mesmo pode atirar e ira desenhar misseis na tela
         this.atirando = false;
         if(atirando){
             this.atirando = this.permiteAtirar();
@@ -110,15 +110,15 @@ public class Ship extends FSprite{
         }
     }
 
-    public boolean isParado() {
+    public boolean isParado() {                                    //Variavel para verificar se a nave esta parada
         return parado;
     }
 
-    public Rectangle getCollision() {
+    public Rectangle getCollision() {                               //Variavel para buscar se houve colisão
         return collision;
     }
-    
-    public void setParado(boolean parado) {
+
+    public void setParado(boolean parado) {                         //Lógica para definir que a nave esta parada, ira adicionar animações do tipo parado.
         this.parado = parado;
         if(this.parado){
             this.shipAnim = this.getShipParadoAnim();
@@ -127,42 +127,42 @@ public class Ship extends FSprite{
         }
     }
 
-    public boolean isMovendoEsquerda() {
+    public boolean isMovendoEsquerda() {                            //Variavel para definir que esta se movendo a esquerda
         return movendoEsquerda;
     }
 
-    public void setMovendoEsquerda(boolean movendoEsquerda) {
+    public void setMovendoEsquerda(boolean movendoEsquerda) {       //Lógica para definir que esta se movendo para esquerda, caso estiver se movendo ira desenhar a animação para o mesmo conforme for se movendo
         this.setMovendo(movendoEsquerda);
         this.movendoEsquerda = movendoEsquerda;
         this.movendoDireita = this.movendoEsquerda ? false : this.movendoDireita;
-        
+
         if(this.movendoEsquerda){
             this.shipAnim = this.getShipMovendoEsquerdaAnim();
         }
-        
-        float x = this.permiteMoverEsquerda() ? this.valorMovimento()*-1 : 0;
+
+        float x = this.permiteMoverEsquerda() ? this.valorMovimento()*-1 : 0; //Verifica se a nave pode se mover para o lado
         if(x < 0){
             this.translateX(x);
         }
     }
 
-    public boolean isMovendoDireita() {
+    public boolean isMovendoDireita() {                              //Variavel para definir que esta se movendo a direita
         return movendoDireita;
     }
 
-    public void setMovendoDireita(boolean movendoDireita) {
+    public void setMovendoDireita(boolean movendoDireita) {       //Lógica para definir que esta se movendo para direita, caso estiver se movendo ira desenhar a animação para o mesmo conforme for se movendo
         this.setMovendo(movendoDireita);
         this.movendoDireita = movendoDireita;
         this.movendoEsquerda = this.movendoDireita ? false : this.movendoEsquerda;
-        
+
         if(this.movendoDireita){
             this.shipAnim = this.getShipMovendoDireitaAnim();
         }
-        
-        float x = this.permiteMoverDireita() ? this.valorMovimento() : 0;
+
+        float x = this.permiteMoverDireita() ? this.valorMovimento() : 0; //Verifica se a nave pode se mover para o lado
         if(x > 0){
             this.translateX(x);
-        }   
+        }
     }
 
     void dispose() {
@@ -172,20 +172,20 @@ public class Ship extends FSprite{
     private int valorMovimento(){
         return 6;
     }
-    
+
     private boolean permiteMover(){
         //implementar por tempo
         return true;
     }
-    
+      //Variaveis para verificar se a nave pode se mover para os lados
     private boolean permiteMoverDireita(){
         return this.permiteMover() && this.getX() < (this.widthTela - (this.widthTela*this.porcentagemLateral/100));
     }
-    
+
     private boolean permiteMoverEsquerda(){
         return this.permiteMover() && this.getX() > (this.widthTela - (this.widthTela*(100-this.porcentagemLateral)/100));
     }
-    
+      //Função que retorna se a nave pode atirar, definido pelo tempo(Timer)
     public boolean permiteAtirar(){
         if(time - timeTiroAnt > 0.5){
             timeTiroAnt = time;
@@ -193,7 +193,7 @@ public class Ship extends FSprite{
         }
         return false;
     }
-    
+      //Desenha a animação na tela quando a nave esta parada
     public final Animation<TextureRegion> getShipParadoAnim() {
         if(this.shipParadoAnim == null){
             this.shipParado = new TextureRegion[3];
@@ -205,7 +205,7 @@ public class Ship extends FSprite{
         return shipParadoAnim;
     }
 
-    public Animation<TextureRegion> getShipMovendoEsquerdaAnim() {
+    public Animation<TextureRegion> getShipMovendoEsquerdaAnim() { //Movimenta as animações para o lado esquerdo
         if(this.shipMovendoEsquerdaAnim == null){
             this.shipMovendoEsquerda = new TextureRegion[3];
             for(int i = 0; i < 3; i++){
@@ -216,7 +216,7 @@ public class Ship extends FSprite{
         return shipMovendoEsquerdaAnim;
     }
 
-    public Animation<TextureRegion> getShipMovendoDireitaAnim() {
+    public Animation<TextureRegion> getShipMovendoDireitaAnim() {  //Movimenta as anicações para o lado direito
         if(this.shipMovendoDireitaAnim == null){
             this.shipMovendoDireita = new TextureRegion[3];
             for(int i = 0; i < 3; i++){
@@ -230,22 +230,22 @@ public class Ship extends FSprite{
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, float delta) {
         this.time = delta;
-        if(this.time - this.timeScore > 1){
+        if(this.time - this.timeScore > 1){ //Define os valores da pontuação
             this.timeScore = this.time;
             this.incScore();
         }
-        
-        this.collision.set(this.getX(), this.getY(), this.collision.getWidth(), this.collision.getWidth());
+
+        this.collision.set(this.getX(), this.getY(), this.collision.getWidth(), this.collision.getWidth()); //Verifica colisoes nos cantos laterais da tel
         TextureRegion currentFrame = this.shipAnim.getKeyFrame(delta, true);
         batch.draw(currentFrame, this.getX(), this.getY());
-        
+
         if(this.useShapeRenderer){
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 //            shapeRenderer.setColor(Color.RED);
             shapeRenderer.rect(this.collision.getX(), this.collision.getY(), this.collision.getWidth(), this.collision.getHeight());
             shapeRenderer.end();
         }
-        
+        //Caso tenha batido verifica se ainda ha vida para continuar, caso não tiver destroi a nave, caso tiver diminui a vida
         if(this.life <= 0){
             this.setDestruido(true);
         } else {
@@ -253,8 +253,8 @@ public class Ship extends FSprite{
             labelScore.draw(batch,Integer.toString(score),widthTela -50, heightTela-20);
         }
     }
-    
-    public boolean collides(Meteor meteor){
+
+    public boolean collides(Meteor meteor){ //Verifica as colisões com os meteoros
         if (this.getX() < meteor.getX() + meteor.getWidth()) {
             if(Intersector.overlaps(meteor.getCollision(),this.collision)){
                 return true;
@@ -263,14 +263,14 @@ public class Ship extends FSprite{
         return false;
     }
 
-    public Missile atirar() {
+    public Missile atirar() { //Chama a função atirar, onde ira definir os valores do tiro, como as posições da tel
         this.atirando = false;
         return new Missile(this.widthTela,this.heightTela,
                 this.collision.getX() + (this.collision.getWidth()/2),
                 this.getY()+this.collision.getHeight());
     }
 
-    public void decLife(Meteor collision){
+    public void decLife(Meteor collision){ //Classe que define os valores das colisoes para diminuir a vida
         switch(collision.tag){
             case 1:
                 this.life -= 10;
@@ -292,8 +292,8 @@ public class Ship extends FSprite{
             this.labelLife.setColor(Color.RED);
         }
     }
-    
-    public void incScore(Meteor collision){
+
+    public void incScore(Meteor collision){ //Classe para definir (aumentar) a pontuação no jogo
         switch(collision.tag){
             case 1:
                 this.score += 25;
@@ -306,9 +306,9 @@ public class Ship extends FSprite{
                 break;
         }
     }
-    
+
     public void incScore(){
         this.score += (this.score / 10) + 1;
     }
-    
+
 }
