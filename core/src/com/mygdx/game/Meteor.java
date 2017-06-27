@@ -21,14 +21,14 @@ import java.util.Random;
  * @author renan
  */
 public class Meteor extends FSprite{
-    public int radius;
-    public int tag;
-    public float gravidade;
+    public int radius; //variavel do raio
+    public int tag; //
+    public float gravidade; // Variavel da Gravidade
     TextureRegion meteor;
     
-    private final Circle collision;
+    private final Circle collision;  //circulo de colisão
     
-    public Meteor(int widthTela, int heightTela, int tag) {
+    public Meteor(int widthTela, int heightTela, int tag) { //Desenha os meteoros na tela com os som
         super(widthTela, heightTela);
         this.setTag(tag);
         Random rand = new Random();
@@ -38,7 +38,7 @@ public class Meteor extends FSprite{
         this.sound = Gdx.audio.newSound(Gdx.files.internal("meteor/sound.wav"));
     }
     
-    public final void setTag(int tag){
+    public final void setTag(int tag){ // define a velocidade com que os meteoros cairam e o tamnho dos mesmo
         this.tag = tag;
         this.meteor = new TextureRegion(new Texture("meteor/meteor"+tag+".png"));
         switch(this.tag){
@@ -62,7 +62,7 @@ public class Meteor extends FSprite{
     }
 
     @Override
-    public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, float delta) {
+    public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, float delta) { //Desenha na tela
         this.setY(this.getY() - this.getGravidade());
         this.collision.set(this.getX(), this.getY(), this.tag * this.radius);
         if (this.getY() <= 0){
@@ -82,7 +82,7 @@ public class Meteor extends FSprite{
         return collision;
     }
     
-    public boolean collides(Ship ship){
+    public boolean collides(Ship ship){ //Dimensão dos colisores
         float m = (this.collision.y - this.collision.radius - 10);
         float s = ship.getCollision().getY();
         if (m < s) {
@@ -91,7 +91,7 @@ public class Meteor extends FSprite{
         return false;
     }
     
-    public boolean collides(List<Missile> missiles){
+    public boolean collides(List<Missile> missiles){  //Metodo para identificar as colisões entre missies
         float m = (this.collision.y - this.collision.radius - 10);
         
         for (Missile missile : missiles) {
@@ -107,7 +107,7 @@ public class Meteor extends FSprite{
     }
 
     @Override
-    public void setDestruido(boolean destruido) {
+    public void setDestruido(boolean destruido) {  //Som destruido
         super.setDestruido(destruido); 
         if(destruido){
             this.playSound(0.5f);
